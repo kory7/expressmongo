@@ -19,16 +19,19 @@ db.on("error", err => {
 //Init app
 const app = express();
 
+//Trae la estrucutra de la base.
 let Articles = require("./models/articles");
+
 //Load View Engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(bodyParser.json());
 
+//Defining public route
 app.use(express.static(path.join(__dirname, "public")));
+
 //Home route
 app.get("/", (req, res) => {
   Articles.find({}, (err, articles) => {
@@ -43,13 +46,12 @@ app.get("/", (req, res) => {
   });
 });
 
-// Add Route
-
+// Add GET
 app.get("/articles/add", (req, res) => {
   res.render("add_article", { title: "Add Article" });
 });
 
-// add submit POST Route
+// Add POST Submit route
 app.post("/articles/add", (req, res) => {
   let article = new Articles();
   article.title = req.body.title;
@@ -65,6 +67,7 @@ app.post("/articles/add", (req, res) => {
     }
   });
 });
+
 //Start server
 app.listen(3000, () => {
   console.log("Running on port 3000");
