@@ -46,6 +46,44 @@ app.get("/", (req, res) => {
   });
 });
 
+// Get single article
+app.get("/article/:id", (req, res) => {
+  Articles.findById(req.params.id, (err, article) => {
+    res.render("article", {
+      article
+    });
+  });
+});
+
+// Load edit form
+app.get("/article/edit/:id", (req, res) => {
+  Articles.findById(req.params.id, (err, article) => {
+    res.render("edit_article", {
+      title: "Edit Article",
+      article
+    });
+  });
+});
+
+// UPDATE POST Submit route
+app.post("/articles/edit/:id", (req, res) => {
+  let article = {};
+  article.title = req.body.title;
+  article.author = req.body.author;
+  article.body = req.body.body;
+
+  let query = { _id: req.params.id };
+
+  Articles.update(query, article, err => {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      res.redirect("/");
+    }
+  });
+});
+
 // Add GET
 app.get("/articles/add", (req, res) => {
   res.render("add_article", { title: "Add Article" });
